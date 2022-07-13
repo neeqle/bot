@@ -35,7 +35,7 @@ HOMEWORK_STATUSES = {
     "rejected": "Работа проверена: у ревьюера есть замечания.",
 }
 SEND_MESSAGE_ERROR = ("Ошибка {error} при отправке"
-                    "сообщения {message} в Telegram")
+                      "сообщения {message} в Telegram")
 TIME_SLEEP = 30
 
 logging.basicConfig(
