@@ -46,9 +46,7 @@ logging.getLogger(__name__)
 
 
 def send_message(bot, message):
-    '''
-    Отправляет сообщение в Telegram чат.
-    '''
+    '''Отправляет сообщение в Telegram чат.'''
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logging.info(SUCCESSFUL_MSG_SENDING.format(message=message))
@@ -58,9 +56,8 @@ def send_message(bot, message):
 
 
 def get_api_answer(current_timestamp):
-    '''
-    Делает запрос к единственному эндпоинту API-сервиса.
-    '''
+    '''Делает запрос к'''
+    '''единственному эндпоинту API-сервиса.'''
     timestamp = current_timestamp or int(time.time())
     params = {'from_date': timestamp}
     try:
@@ -80,9 +77,7 @@ def get_api_answer(current_timestamp):
 
 
 def check_response(response):
-    '''
-    Проверяет ответ API на корректность.
-    '''
+    '''Проверяет ответ API на корректность.'''
     if isinstance(response, dict):
         if 'homeworks' not in response:
             raise exc.MissingKey(HW_NOT_IN_LIST)
@@ -92,9 +87,8 @@ def check_response(response):
 
 
 def parse_status(homework):
-    '''
-    Извлекает из информации о конкретной домашней работе статус этой работы.
-    '''
+    '''Извлекает из информации о конкретной'''
+    '''домашней работе статус этой работы.'''
     homework_name = homework.get('homework_name')
     homework_status = homework.get('status')
     result_string = f'"{homework_name}". {HOMEWORK_STATUSES[homework_status]}'
@@ -104,10 +98,8 @@ def parse_status(homework):
 
 
 def check_tokens():
-    '''
-    Проверяет доступность переменных окружения, 
-    которые необходимы для работы программы. 
-    '''
+    '''Проверяет доступность переменных окружения,'''
+    '''которые необходимы для работы программы.'''
     tokens = [
         [TELEGRAM_TOKEN, None, TOKEN_ERRORS[0]],
         [TELEGRAM_CHAT_ID, None, TOKEN_ERRORS[1]],
@@ -121,9 +113,7 @@ def check_tokens():
 
 
 def main():
-    """
-    Основная логика работы программы. 
-    """
+    """Основная логика работы программы."""
     tokens_exist = check_tokens()
     logging.debug(f'check_tokens вернула {tokens_exist}')
     if tokens_exist:
@@ -166,6 +156,7 @@ def main():
         raise exc.TokensAreNotGivenException(
             'Ошибка передачи обязательных переменных окружения'
         )
+
 
 if __name__ == '__main__':
     main()
