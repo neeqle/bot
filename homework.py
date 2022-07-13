@@ -34,7 +34,8 @@ HOMEWORK_STATUSES = {
     "reviewing": "Работа взята на проверку ревьюером.",
     "rejected": "Работа проверена: у ревьюера есть замечания.",
 }
-SEND_MESSAGE_ERROR = "Ошибка {error} при отправке сообщения {message} в Telegram"
+SEND_MESSAGE_ERROR = ("Ошибка {error} при отправке"
+                    "сообщения {message} в Telegram")
 TIME_SLEEP = 30
 
 logging.basicConfig(
@@ -100,7 +101,7 @@ def parse_status(homework):
 
 
 def check_tokens():
-    """Проверяет доступность переменных окружения"""
+    """Проверяет доступность переменных окружения."""
     tokens = [
         [TELEGRAM_TOKEN, None, TOKEN_ERRORS[0]],
         [TELEGRAM_CHAT_ID, None, TOKEN_ERRORS[1]],
