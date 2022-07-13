@@ -11,7 +11,7 @@ import exceptions as exc
 load_dotenv()
 
 API_RESPONSE_ERROR = (
-    'Значение кода возрата "{response}" ' 'не соответствует требуемому - "200".'
+    'Значение кода возрата "{response}" не соответствует требуемому - "200".'
 )
 PRACTICUM_TOKEN = os.getenv("PRACTICUM_TOKEN")
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
@@ -34,7 +34,7 @@ HOMEWORK_STATUSES = {
     "reviewing": "Работа взята на проверку ревьюером.",
     "rejected": "Работа проверена: у ревьюера есть замечания.",
 }
-SEND_MESSAGE_ERROR = "Ошибка {error} при отправке сообщения " "{message} в Telegram"
+SEND_MESSAGE_ERROR = "Ошибка {error} при отправке сообщения {message} в Telegram"
 TIME_SLEEP = 30
 
 logging.basicConfig(
