@@ -102,7 +102,6 @@ def check_tokens():
         return False
 
 
-
 def main():
     """Основная логика работы программы."""
     if check_tokens():
@@ -135,6 +134,6 @@ if __name__ == "__main__":
         stream=sys.stdout,
         filemode="a",
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        level=logging.DEBUG, 
+        level=logging.DEBUG,
     )
     main()
