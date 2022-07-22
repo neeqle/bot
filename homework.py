@@ -100,7 +100,6 @@ def check_tokens():
 
 def main():
     """Основная логика работы программы."""
-
     if not check_tokens():
         sys.exit('Ошибка в переменных окружения')
 
@@ -128,7 +127,7 @@ def main():
                 send_message(bot, message)
                 message_cache = message
                 logger.error(f'Бот столкнулся с ошибкой запроса: {error}')
-        
+
         finally:
             time.sleep(RETRY_TIME)
 
