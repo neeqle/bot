@@ -5,6 +5,8 @@ import sys
 import time
 import telegram
 
+from http import HTTPStatus
+
 from dotenv import load_dotenv
 import exceptions as exc
 
@@ -62,9 +64,7 @@ def get_api_answer(current_timestamp):
     except Exception:
         message = "Запрос выполнить не удалось"
         raise exc.AnswerError(message)
-    if "error" in response.json():
-        raise exc.ResponseError(f'{response: "error"}')
-    if response.status_code != 200:
+    if response.status_code != HTTPStatus.OK:
         raise exc.ResponseError(
             API_RESPONSE_ERROR.format(response=response.status_code)
         )
@@ -95,36 +95,40 @@ def parse_status(homework):
 
 def check_tokens():
     """Проверяет доступность переменных окружения."""
-    if all([PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID]):
-        return True
-    else:
-        logger.critical('Отсутствуют одна или несколько переменных окружения')
-        return False
+    return all([PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID])
 
 
 def main():
     """Основная логика работы программы."""
-    if check_tokens():
-        bot = telegram.Bot(token=TELEGRAM_TOKEN)
-    else:
-        return
-    current_timestamp = int(time.time())
 
+    if not check_tokens():
+        sys.exit('Ошибка в переменных окружения')
+
+    bot = telegram.Bot(token=TELEGRAM_TOKEN)
+    current_timestamp = int(time.time())
+    message_cache = None
+# не совсем понял как сделать со словарями,
+# попробовал так
     while True:
         try:
             response = get_api_answer(current_timestamp)
             homeworks = check_response(response)
             if homeworks:
-                homework = homeworks[0]
-                message = parse_status(homework)
-                send_message(bot, message)
-            current_timestamp = int(time.time())
-
+                for homework in homeworks:
+                    message = parse_status(homework)
+                    send_message(bot, message)
+                current_timestamp = int(time.time())
+            else:
+                logger.debug('Отсутствует новая информация')
+            time.sleep(RETRY_TIME)
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
-            logger.error(f'Бот столкнулся с ошибкой запроса: {error}')
-            send_message(bot, message)
-
+            if (message_cache != message
+               and isinstance(error, exc.ErrorException)):
+                send_message(bot, message)
+                message_cache = message
+                logger.error(f'Бот столкнулся с ошибкой запроса: {error}')
+        
         finally:
             time.sleep(RETRY_TIME)
 

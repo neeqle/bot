@@ -20,3 +20,6 @@ class ImproperAPIAnswerException(Exception):
 
 class TokensAreNotGivenException(Exception):
     pass
+
+class ErrorException(Exception):
+    pass
