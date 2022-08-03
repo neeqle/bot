@@ -104,26 +104,28 @@ def main():
         sys.exit('Ошибка в переменных окружения')
 
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
-    current_timestamp = int(time.time())
+
     message_cache = None
-# не совсем понял как сделать со словарями,
-# попробовал так
+    reports_cache = {}
+
     while True:
         try:
+            current_timestamp = int(time.time())
             response = get_api_answer(current_timestamp)
             homeworks = check_response(response)
             if homeworks:
-                for homework in homeworks:
-                    message = parse_status(homework)
-                    send_message(bot, message)
-                current_timestamp = int(time.time())
+                for hw in homeworks:
+                    status = parse_status(hw)
+                    name = hw.get("homework_name")
+                    if reports_cache.get(name, "") != status:
+                        reports_cache[name] = status
+                        send_message(bot, status)
             else:
                 logger.debug('Отсутствует новая информация')
             time.sleep(RETRY_TIME)
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
-            if (message_cache != message
-               and isinstance(error, exc.ErrorException)):
+            if (message_cache != message):
                 send_message(bot, message)
                 message_cache = message
                 logger.error(f'Бот столкнулся с ошибкой запроса: {error}')
