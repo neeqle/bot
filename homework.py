@@ -114,15 +114,13 @@ def main():
             response = get_api_answer(current_timestamp)
             homeworks = check_response(response)
             if homeworks:
-                for hw in homeworks:
-                    status = parse_status(hw)
-                    name = hw.get("homework_name")
-                    if reports_cache.get(name, "") != status:
-                        reports_cache[name] = status
-                        send_message(bot, status)
+                status = parse_status(homeworks)
+                name = homeworks.get("homework_name")
+                if reports_cache.get(name, "") != status:
+                    reports_cache[name] = status
+                    send_message(bot, status)
             else:
                 logger.debug('Отсутствует новая информация')
-            time.sleep(RETRY_TIME)
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
             if (message_cache != message):
