@@ -112,9 +112,9 @@ def main():
         try:
             current_timestamp = int(time.time())
             response = get_api_answer(current_timestamp)
-            homeworks = check_response(response)
+            homeworks: dict = check_response(response)
             if homeworks:
-                status = parse_status(homeworks['homeworks'])
+                status = parse_status(homeworks)
                 name = homeworks.get("homework_name")
                 if reports_cache.get(name, "") != status:
                     reports_cache[name] = status
