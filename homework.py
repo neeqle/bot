@@ -74,34 +74,26 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
-    try:
-        if isinstance(response, dict):
-            homeworks = response.get('homeworks')
-    except KeyError as error:
-        message = f'Неверное значение ключа homeworks: {error}'
-        logger.error(message)
-        raise exc.DictKeysError(message)
     if not isinstance(response, dict):
-        message = f'Объект {response} не является словарем'
-        logger.error(message)
-        raise exc.NotDictError(message)
-    if 'homeworks' not in response:
-        message = f'Объект {response} не содержит "homeworks"'
-        logger.error(message)
-        raise KeyError(message)
-    if 'current_date' not in response:
-        message = f'Объект {response} не содержит "current_date"'
-        logger.error(message)
-        raise KeyError(message)
-    if not isinstance(homeworks, list):
-        message = f'Объект {homeworks} не является списком'
-        logger.error(message)
-        raise exc.NotListError(message)
-    return homeworks
+        raise TypeError()
+    elif not isinstance(response["homeworks"], list):
+        raise TypeError(HW_NOT_LIST_ERR)
+    elif "homeworks" not in response:
+        raise exc.MissingKey(HW_NOT_IN_LIST)
+    else:
+        homeworks = response.get('homeworks')[0]
+        if not homeworks:
+            raise exc.HomeworkError()
+        else:
+            return homeworks
 
 
 def parse_status(homework):
     """Извлекает статус домашней работы."""
+    if 'homework_name' not in homework:
+        raise KeyError('Отсутствует ключ "homework_name" в ответе API')
+    if 'status' not in homework:
+        raise KeyError('Отсутствует ключ "status" в ответе API')
     homework_name = homework.get("homework_name")
     homework_status = homework.get("status")
     result_string = f'"{homework_name}". {HOMEWORK_VERDICTS[homework_status]}'
@@ -129,7 +121,7 @@ def main():
         try:
             current_timestamp = int(time.time())
             response = get_api_answer(current_timestamp)
-            homeworks: dict = check_response(response)
+            homeworks = check_response(response)
             if homeworks:
                 status = parse_status(homeworks)
                 name = homeworks.get("homework_name")

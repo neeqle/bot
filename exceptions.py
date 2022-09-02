@@ -26,14 +26,5 @@ class ErrorException(Exception):
     pass
 
 
-class NotListError(Exception):
+class HomeworkError(Exception):
     pass
-
-
-class DictKeysError(Exception):
-    pass
-
-
-class NotDictError(Exception):
-    pass
-
