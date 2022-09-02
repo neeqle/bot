@@ -74,13 +74,30 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
-    if type(response) != dict:
-        raise TypeError()
-    if "homeworks" not in response:
-        raise exc.MissingKey(HW_NOT_IN_LIST)
-    if not isinstance(response["homeworks"], list):
-        raise TypeError(HW_NOT_LIST_ERR)
-    return response["homeworks"]
+    try:
+        if isinstance(response, dict):
+            homeworks = response.get('homeworks')
+    except KeyError as error:
+        message = f'Неверное значение ключа homeworks: {error}'
+        logger.error(message)
+        raise exc.DictKeysError(message)
+    if not isinstance(response, dict):
+        message = f'Объект {response} не является словарем'
+        logger.error(message)
+        raise exc.NotDictError(message)
+    if 'homeworks' not in response:
+        message = f'Объект {response} не содержит "homeworks"'
+        logger.error(message)
+        raise KeyError(message)
+    if 'current_date' not in response:
+        message = f'Объект {response} не содержит "current_date"'
+        logger.error(message)
+        raise KeyError(message)
+    if not isinstance(homeworks, list):
+        message = f'Объект {homeworks} не является списком'
+        logger.error(message)
+        raise exc.NotListError(message)
+    return homeworks
 
 
 def parse_status(homework):

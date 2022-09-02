@@ -21,5 +21,19 @@ class ImproperAPIAnswerException(Exception):
 class TokensAreNotGivenException(Exception):
     pass
 
+
 class ErrorException(Exception):
     pass
+
+
+class NotListError(Exception):
+    pass
+
+
+class DictKeysError(Exception):
+    pass
+
+
+class NotDictError(Exception):
+    pass
+
