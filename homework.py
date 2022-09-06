@@ -76,16 +76,9 @@ def check_response(response):
     """Проверяет ответ API на корректность."""
     if not isinstance(response, dict):
         raise TypeError()
-    elif not isinstance(response["homeworks"], list):
-        raise TypeError(HW_NOT_LIST_ERR)
-    elif "homeworks" not in response:
-        raise exc.MissingKey(HW_NOT_IN_LIST)
     else:
         homeworks = response.get('homeworks')[0]
-        if not homeworks:
-            raise exc.HomeworkError()
-        else:
-            return homeworks
+        return homeworks
 
 
 def parse_status(homework):
